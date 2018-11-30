@@ -1,3 +1,7 @@
+# Our stuff 
+**/.DS_Store 
+**/.ipynb_checkpoints
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
