@@ -1,0 +1,228 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{mathrsfs}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage{bbm}
+\author{Arnav Sood}
+\title{Credit \& Credibility}
+\date{\today}
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\begin{document}
+\maketitle
+
+\subsection*{Model}
+
+\paragraph{Big Picture} This is a model of strategic behavior by a credit rater. In particular, the agency both chooses a strategy for assigning ratings to firms, and a single price $p$ for the rating service. The idea is that $p$ is a tool by which the reporter can control the "ground truth" of the client pool it has to rate, in the same way that college tuition can serve as a filter on applicants. 
+
+\paragraph{Global "Time 0" Objects}
+
+\begin{itemize}
+    \item A unit mass of firms $i \in [0, 1]$, with types $\theta_i \in \{H, L\}$ 
+    \item Two type-dependent distributions of outside offers $F_H(\cdot)$ and $F_L(\cdot)$, on the same bounded support $[\uline{\omega}, \overbar{\omega}]$, such that $\mathbb{E}F_L \leq \mathbb{E}F_H$. These can be interpreted as ratings offers from other reporters, private investment, a job-market outcome for an entrepreneur, etc. 
+    \item A credit market with a prior belief $\lambda$ about the distribution of good firms in the market (i.e., the distributions of good firms that \emph{exist})
+    \item A mechanistic confidence threshold $\uline{\lambda} > \lambda$ for investment which assigns investment outcomes to firms by 
+    
+    \begin{equation}
+        \mu: \tilde{\lambda} \mapsto 
+        \begin{cases}
+            R & \tilde{\lambda} \geq \uline{\lambda} \\ 
+            0 & \textup{otherwise}
+        \end{cases}
+    \end{equation}
+\end{itemize}
+
+\paragraph{Sequence of Moves}
+
+\begin{enumerate}
+    \item Credit reporter chooses a ratings strategy $\phi : \theta \mapsto \Delta(\{h, l\})$ and a price $p \in \mathbb{R}^+$.
+    \begin{enumerate}
+        \item Conjecture that $\Pr[h | H] = 1$ (why hide your peaches?)
+        \item So gives us really a choice of $\phi : L \mapsto \Delta(\{h, l\})$. Since there are only two types, this is just the choice of a scalar $\Pr[h | L]$. For simplicity, from now on we'll call that $\phi$. 
+        \item Call those whole policy $m \in M$, where $M$ is a space of mechanisms (??)
+    \end{enumerate}
+    \item Firms, observing the reporter's moves, choose their entry policies. 
+
+    \begin{equation}
+        e: \theta_i \times \omega_i \times m \to [0, 1]
+    \end{equation}
+
+    \item The credit market updates its beliefs and assigns investment outcomes to firms 
+
+    \begin{enumerate}
+        \item The market calculates a signal-independent \emph{inflow prior} $\lambda^I(m)$, based only on the mechanism, which is a confidence rating conditioned solely on the entry decision. 
+        \item The market calculates signal-dependent posteriors $\lambda^o(h, m), \lambda^o(l, m)$. 
+        \item The market assigns investment outcomes. 
+    \end{enumerate}
+\end{enumerate}
+
+\paragraph{Equilibrium Definition}
+
+An equilibrium is: 
+
+\begin{enumerate}
+    \item A mechanism $m \equiv (\phi, p) \in M$
+    \item An entry map $e: \theta_i \times \omega_i \times m \to [0, 1]$ 
+    \item A set of updated beliefs $\lambda^I(m), \lambda^o(h, m), \lambda^o(l, m)$ and investment outcomes $\mu(\lambda)$
+\end{enumerate}
+
+such that 
+
+\begin{enumerate}
+    \item The mechanism $m$ satisfies the credit reporter's optimality condition 
+    
+    \[ \max_{m \in M} p \mathbb{E} |\Gamma(m)| \]
+
+    where $\Gamma(m)$ is the set of firms who choose to transact with the reporter. 
+
+    \item The entry map satisfies firms' optimality: 
+    
+    \begin{enumerate}
+        \item $\lambda^o(h, m) < \uline{\lambda} \implies e = 0$ (don't enter if the market outcome is deterministically zero)
+        \item Otherwise, 
+        
+        \begin{equation}
+            e(\theta, m) = F_\theta(\phi_\theta R - p)
+        \end{equation} 
+    \end{enumerate}
+
+    \item The posterior beliefs are compatible with Bayes' theorem 
+\end{enumerate}
+
+\newpage 
+
+\subsection*{Model Solution} 
+
+\subsubsection*{Market's Problem}
+
+Start with the investors' beliefs given $m \in M$ and $e$.
+
+The inflow prior is: 
+
+\begin{equation}
+    \lambda^I(m) = \frac{e(H, m)\lambda}{e(H,m)\lambda + e(L, m)(1-\lambda)}
+\end{equation}
+
+The signal-dependent prior is (afer applying our $\Pr[h | h] = 1$ conjecture): 
+
+\begin{equation}
+    \lambda^o(h, m) = \frac{\lambda^I(m)}{\lambda^I(m) + (1-\lambda^I(m))\phi}
+\end{equation}
+
+Note that this is the only belief which matters, because if $\Pr[h | H] = 1$, then $\lambda^o(l) = 0$ (i.e., if high firms are always sorted correctly, then a low signal means you're worthless)
+
+\subsubsection*{Firms' Problem}
+
+Look for a simultaneous Nash equilibrium $(e_H, e_L) \in \mathbb{R}^2$. 
+
+As above, in an interior equilibrium we have the entry flows: 
+
+\begin{itemize}
+    \item High types: $e_H = F_H(R - p)$
+    \item Low types: $e_L = F_L(\phi R - p)$ 
+\end{itemize}
+
+subject to the constraint that $\mathbbm{1}_{\lambda^o(h) \geq \uline{\lambda}} = 1$.
+
+Rewrite that prior in terms of model primitives: 
+
+\begin{equation}
+    \lambda^o(h) = \frac{e_H \lambda}{e_H \lambda + \phi e_L (1 - \lambda)} \geq \uline{\lambda}
+\end{equation}
+
+We can rewrite this as a constraint on $\phi$: 
+
+\begin{equation}
+    \phi \leq \frac{e_H \lambda (1 - \uline{\lambda})}{e_L \uline{\lambda} (1 - \lambda)}
+\end{equation} 
+
+This passes a sanity check, since it says that (a) the maximum allowable dishonesty $\phi$ is bounded above by some function of the right quantities, and (b) the bound is increasing in high entry, decreasing in low entry.
+
+
+\subsubsection*{Rater's Problem}
+
+The rater wants to maximize $p \mathbb{E} | \Gamma(p, \phi) |$, as above. We know that entry flow is $F_L(\phi R - p) + F_H(R - p)$. So this gives us the following optimization problem: 
+
+\begin{equation}
+    \begin{aligned}
+    & \underset{p, \phi}{\text{maximize}}
+    & & p \Big(F_H(R - p) + F_L(\phi R - p)\Big) \\
+    & \text{subject to}
+    & & 0 \leq \phi \leq \frac{e_H \lambda (1 - \uline{\lambda})}{e_L \uline{\lambda} (1 - \lambda)}
+    \end{aligned}
+\end{equation}
+
+We see that $\frac{\partial}{\partial \phi}$ of the objective is positive, which means that, whatever the price, the rater can benefit by lying a little more (within the constraint). Let $\tau$ be the ratio 
+
+\begin{equation}
+    \tau \equiv \frac{\lambda(1-\uline{\lambda})}{\uline{\lambda}(1-\lambda)}
+\end{equation}
+
+Then we have 
+
+\begin{equation}
+    \begin{aligned}
+    & \underset{p, \phi}{\text{maximize}}
+    & & p \Big(F_H(R - p) + F_L(\phi R - p)\Big) \\
+    & \text{subject to}
+    & & \frac{\phi}{\tau} = \frac{F_H(R-p)}{F_L(\phi R - p)} \equiv \frac{e_H}{e_L}
+    \end{aligned}
+\end{equation}
+
+We can sketch out this optimal curve for a simple example. (Would it help to interpret $\phi$ as the fixed point of a map $f: x \mapsto \frac{\tau e_H(p)}{e_L(\phi, p)}$?)
+
+\newpage 
+
+% \subsection*{Lagrangian Formulation (WIP)}
+
+% This turned out messier than I'd hoped, so I put it in a separate page. 
+
+% \begin{equation*}
+%     \mathscr{L} = p \Big(F_H(R - p) + F_L(\phi R - p)\Big) - \beta \Big(\frac{F_H(R - p) \lambda}{F_H(R - p) \lambda + \phi F_L(\phi R - p) (1 - \lambda)} - \uline{\lambda} \Big)
+% \end{equation*}
+
+% Write down the FOCs: 
+
+% \paragraph{FOC ($\beta$)} This just gives us $\frac{F_H(R - p) \lambda}{F_H(R - p) \lambda + \phi F_L(\phi R - p) (1 - \lambda)} = \uline{\lambda}$, the market credulity constraint. 
+
+% \paragraph{FOC ($p$)} Write the raw partial derivative 
+
+% \begin{align*}
+%     \frac{\partial}{\partial p} \mathscr{L} &= \left[F_H(R - p) + F_L(\phi R - p)\right] - p \left[f_H(R - p) + f_L(\phi R - p) \right] + \beta \frac{f_H(R - p)\lambda}{F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)} \\ 
+%     &- \beta (F_H(R - p)\lambda)\frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\left[F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)\right]^2}
+% \end{align*}
+
+% Now, we can simplify. Say that $\tau \equiv F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)$. This is thus: 
+
+% \begin{align*}
+%     \frac{\partial}{\partial p} \mathscr{L} &= \left[F_H(R - p) + F_L(\phi R - p)\right] - p \left[f_H(R - p) + f_L(\phi R - p) \right] + \beta \frac{f_H(R - p)\lambda}{\tau} \\ 
+%     &- \beta (F_H(R - p)\lambda)\frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau^2}
+% \end{align*}
+
+% And rewrite after equating to 0: 
+
+% \begin{align*}
+%     F_H(R - p) + F_L(\phi R - p) + \beta \frac{f_H (R - p)\lambda}{\tau} = \hspace{1 em} &p[f_H(R - p) + f_L(\phi R - p)] \\ 
+%     &+ \beta \frac{F_H (R - p)\lambda}{\tau} \frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau}
+% \end{align*}
+
+% And substituting in for entry decisions wherever possible: 
+
+% \begin{align*}
+%     e_H + e_L + \beta \frac{f_H (R - p)\lambda}{\tau} = \hspace{1 em} &p[f_H(R - p) + f_L(\phi R - p)] \\ 
+%     &+ \beta \frac{e_H\lambda}{\tau} \frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau}
+% \end{align*}
+
+% Where $\tau \equiv e_H \lambda + \phi e_L (1 -\lambda)$.
+
+% \paragraph{FOC ($\phi$)} Write the raw partial derivative 
+
+% \begin{align*}
+%     \frac{\partial}{\partial \phi} \mathscr{L} &= p f_L (\phi R - p)R + \beta e_H \lambda ( 1 - \lambda) \frac{e_L + \phi f_L (\phi R - p)R}{\tau^2}
+% \end{align*}
+
+
+\end{document}
+
