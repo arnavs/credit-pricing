@@ -1,228 +1,310 @@
 \documentclass{article}
-\usepackage{amsmath, amssymb, amsthm, amsfonts}
-\usepackage{mathrsfs}
-\usepackage{hyperref}
-\usepackage{ulem}
+\usepackage{amsmath, amsthm, amsfonts, amssymb}
 \usepackage{bbm}
-\author{Arnav Sood}
-\title{Credit \& Credibility}
-\date{\today}
+\usepackage{mathrsfs}
 
-\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\theoremstyle{definition}
+\newtheorem{proposition}{Proposition}
+
+
+\title{Credit \& Credibility }
+\author{Arnav Sood (\texttt{arnav.sood@ubc.ca}) \\ \normalsize Supervised by: Prof. Vitor Farinha Luz (\texttt{vitor.farinhaluz@ubc.ca})}
+\date{\today}
 
 \begin{document}
 \maketitle
 
-\subsection*{Model}
+\paragraph*{Overivew} We study a model of strategic behavior by a profit-maximizing credit rating agency (CRA). The rater jointly chooses the ratings and the (flat) price of a rating, so as to influence the size and composition of the set of ratings-seeking firms. We derive equilibrium conditions for the static case, and present some numerical results. 
 
-\paragraph{Big Picture} This is a model of strategic behavior by a credit rater. In particular, the agency both chooses a strategy for assigning ratings to firms, and a single price $p$ for the rating service. The idea is that $p$ is a tool by which the reporter can control the "ground truth" of the client pool it has to rate, in the same way that college tuition can serve as a filter on applicants. 
+Of course, this is not a \emph{sui generis} area of research. Bolton, Freixas, and Shapiro (2010) model CRAs as players in a competitive market. Bar-Isaac and Shapiro (2010) analyze the time-varying nature of their incentives and behavior over the business cycle, and Kamenica and Gentzow (2011) establish the seminal ``Bayesian Persuasion" setting for strategic information transmission. 
 
-\paragraph{Global "Time 0" Objects}
+We are indebted to all of this work (and more). The chief contribution of this note is to jointly solve the pricing problem and ``decision problem'' for ratings in one shot.
+
+\paragraph*{JEL Codes} G24, D82, D83
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Setting}
+
+\subsection{Agents}
+
+The model has three classes of agent: 
 
 \begin{itemize}
-    \item A unit mass of firms $i \in [0, 1]$, with types $\theta_i \in \{H, L\}$ 
-    \item Two type-dependent distributions of outside offers $F_H(\cdot)$ and $F_L(\cdot)$, on the same bounded support $[\uline{\omega}, \overbar{\omega}]$, such that $\mathbb{E}F_L \leq \mathbb{E}F_H$. These can be interpreted as ratings offers from other reporters, private investment, a job-market outcome for an entrepreneur, etc. 
-    \item A credit market with a prior belief $\lambda$ about the distribution of good firms in the market (i.e., the distributions of good firms that \emph{exist})
-    \item A mechanistic confidence threshold $\uline{\lambda} > \lambda$ for investment which assigns investment outcomes to firms by 
+    \item A mass-one continuum of firms, who have types $\theta_i$ distributed i.i.d. in $\{H, L\}$ (``High,'' ``Low.'') Each firm also has an associated \emph{outside option} $\omega_i$, which is drawn i.i.d. from a (differentiable, etc.) type-contingent distribution $F_\theta$ with compact support $[\underline{\omega_\theta}, \overline{\omega_\theta}]$
+    
+    Firms solve a static decision problem about market entry: 
+
+    \begin{equation}
+        V_i \equiv \max \{\omega_i, \mathbb{E} U(\theta) - p \}
+        \label{firm-objective}
+    \end{equation}
+
+    where $U(\theta)$ is the payoff from obtaining a rating as a firm of type $\theta$, and $p$ is the price of a rating.
+    
+    \item A single \emph{credit rater} (CRA). The CRA's goal is to choose a ratings scheme $m$ (in practice, summarized by a dishonesty parameter $\phi$ and a price $p$), to solve 
     
     \begin{equation}
-        \mu: \tilde{\lambda} \mapsto 
-        \begin{cases}
-            R & \tilde{\lambda} \geq \uline{\lambda} \\ 
-            0 & \textup{otherwise}
-        \end{cases}
+        \max\limits_{p \geq 0, \phi \in [0, 1]} p \{F_L(\phi R - p)(1 - \lambda) + F_H(R - p)\lambda\}
+        \label{CRA-objective}
     \end{equation}
+
+    In \eqref{CRA-objective}, $\lambda$ is the common prior about the share of $H$-type firms.
+
+    \item A \emph{public debt market}, which maps signals to investment outcomes according to a simple cutoff rule: 
+    
+    \begin{equation}
+        \label{market-objective}
+        U: \theta \mapsto R \mathbbm{1}_{\lambda^o(\theta) \geq \underline{\lambda}, \theta = h}
+    \end{equation}
+
+    That is: if the market's belief that a firm in question is of type $H$ (written $\lambda^o(h)$) exceeds some exogenous cutoff ($\underline{\lambda}$), then the firm is assigned a flat investment $R \in \text{supp}F_H$.  
+
+    Note that we've implicitly assumed the set of firm signals is $\{h, l\}$ such that $m: H \mapsto h$ always. We will defend this later. 
 \end{itemize}
 
-\paragraph{Sequence of Moves}
+\subsection{Timing}
 
 \begin{enumerate}
-    \item Credit reporter chooses a ratings strategy $\phi : \theta \mapsto \Delta(\{h, l\})$ and a price $p \in \mathbb{R}^+$.
-    \begin{enumerate}
-        \item Conjecture that $\Pr[h | H] = 1$ (why hide your peaches?)
-        \item So gives us really a choice of $\phi : L \mapsto \Delta(\{h, l\})$. Since there are only two types, this is just the choice of a scalar $\Pr[h | L]$. For simplicity, from now on we'll call that $\phi$. 
-        \item Call those whole policy $m \in M$, where $M$ is a space of mechanisms (??)
-    \end{enumerate}
-    \item Firms, observing the reporter's moves, choose their entry policies. 
-
-    \begin{equation}
-        e: \theta_i \times \omega_i \times m \to [0, 1]
-    \end{equation}
-
-    \item The credit market updates its beliefs and assigns investment outcomes to firms 
-
-    \begin{enumerate}
-        \item The market calculates a signal-independent \emph{inflow prior} $\lambda^I(m)$, based only on the mechanism, which is a confidence rating conditioned solely on the entry decision. 
-        \item The market calculates signal-dependent posteriors $\lambda^o(h, m), \lambda^o(l, m)$. 
-        \item The market assigns investment outcomes. 
-    \end{enumerate}
-\end{enumerate}
-
-\paragraph{Equilibrium Definition}
-
-An equilibrium is: 
-
-\begin{enumerate}
-    \item A mechanism $m \equiv (\phi, p) \in M$
-    \item An entry map $e: \theta_i \times \omega_i \times m \to [0, 1]$ 
-    \item A set of updated beliefs $\lambda^I(m), \lambda^o(h, m), \lambda^o(l, m)$ and investment outcomes $\mu(\lambda)$
-\end{enumerate}
-
-such that 
-
-\begin{enumerate}
-    \item The mechanism $m$ satisfies the credit reporter's optimality condition 
+    \item The CRA chooses a scheme $m \equiv (p, \phi)$ according to the common prior $\lambda$ about the share of high-type firms, in order to solve \eqref{CRA-objective}.
     
-    \[ \max_{m \in M} p \mathbb{E} |\Gamma(m)| \]
-
-    where $\Gamma(m)$ is the set of firms who choose to transact with the reporter. 
-
-    \item The entry map satisfies firms' optimality: 
+    \item Firms observe $(p, \phi)$, and make entry decisions according to \eqref{firm-objective}. Denote the proportion of firms of type $\theta$ which decide to buy ratings as $e_\theta$ (i.e., the mass of high entrants is $e_H \lambda$.)
     
-    \begin{enumerate}
-        \item $\lambda^o(h, m) < \uline{\lambda} \implies e = 0$ (don't enter if the market outcome is deterministically zero)
-        \item Otherwise, 
-        
-        \begin{equation}
-            e(\theta, m) = F_\theta(\phi_\theta R - p)
-        \end{equation} 
-    \end{enumerate}
-
-    \item The posterior beliefs are compatible with Bayes' theorem 
+    \item The market observes $\{(p, \phi), e_H, e_L\}$, and mechanistically executes the investment rule in \eqref{market-objective}.
 \end{enumerate}
+
+\subsection{Caveats}
+
+Before proceeding with an analysis of this model, it's worth examining its implicit assumptions. 
+
+\begin{enumerate}
+    \item \textbf{No Transfer Payments:} It's conceivable that firms of the low type (who may have more to gain from a high credit rating, say if $\mathbb{E} F_L < \mathbb{E} F_H$) might pay more to the CRA for a good rating. This is ruled out by our flat price $p$.
+    
+    \item \textbf{No Outside Information:} In this simple model, the only source of information available to the market is the single CRA. In practice, there is a competitive market for information\footnote{See, e.g., Veldkamp (2005)}, which may discipline the information put out by a CRA.
+    
+    \item \textbf{No Inside Information:} Likewise, we do not allow firms to generate their own information (e.g., in reality a high-type firm may decide to seek debt financing instead of equity financing, so as to signal its type.)
+    
+    \item \textbf{No CRA Competition:} In practice, the credit-ratings industry is an oligopoly and not a monopoly (i.e., it is dominated by Fitch, Moody's, and Standard \& Poor's.) So the monopoly pricing section of this note is likely not generalizable.
+\end{enumerate}
+
+Of course, there are many other unrealistic aspects of this simple static model, but these are perhaps the most significant.
 
 \newpage 
 
-\subsection*{Model Solution} 
+\section{General Case}
 
-\subsubsection*{Market's Problem}
+In this section, we derive objects such as equilibrium conditions which are relevant to most cases of the model (i.e., we impose relatively loose restrictions on parameters.)
 
-Start with the investors' beliefs given $m \in M$ and $e$.
+\subsection{Equilibrium Conditions}
 
-The inflow prior is: 
+\subsubsection{Market's Problem}
 
-\begin{equation}
-    \lambda^I(m) = \frac{e(H, m)\lambda}{e(H,m)\lambda + e(L, m)(1-\lambda)}
-\end{equation}
+Begin with the market's problem; implementing the investment rule \eqref{market-objective}. The key is to construct an expression for $\lambda^o(h)$, or market confidence in the validity of an $h$ signal.
 
-The signal-dependent prior is (afer applying our $\Pr[h | h] = 1$ conjecture): 
+First, define the \emph{inflow prior}, or the confidence that $\theta = H$ conditional merely on seeking a rating. 
 
 \begin{equation}
-    \lambda^o(h, m) = \frac{\lambda^I(m)}{\lambda^I(m) + (1-\lambda^I(m))\phi}
+    \label{inflow-prior}
+    \lambda^I \equiv \frac{e_H \lambda}{e_H \lambda + e_L (1 - \lambda)}
 \end{equation}
 
-Note that this is the only belief which matters, because if $\Pr[h | H] = 1$, then $\lambda^o(l) = 0$ (i.e., if high firms are always sorted correctly, then a low signal means you're worthless)
+This is the raw proportion of high types in the ratings pool, ignoring the actual ratings.
 
-\subsubsection*{Firms' Problem}
+Using this object, and we can give an expression for:
 
-Look for a simultaneous Nash equilibrium $(e_H, e_L) \in \mathbb{R}^2$. 
+\begin{equation}
+    \label{lambda-o}
+    \lambda^o(h) \equiv \Pr[\theta = H | h]
+\end{equation}
 
-As above, in an interior equilibrium we have the entry rules: 
+Which is: 
+
+\begin{equation}
+    \lambda^o(h) = \frac{\lambda^I}{\lambda^I + (1 - \lambda^I)\phi}
+\end{equation}
+
+Note that (as mentioned earlier, and to be justified later) $m : H \mapsto h$ always, so dishonesty is strictly about ratings $L \mapsto h$. These happen at rate $\phi$.
+
+After substitution: 
+
+\begin{equation}
+    \label{lambda-o-final}
+    \lambda^o(h) = \frac{e_H \lambda}{e_H \lambda + \phi e_L (1 - \lambda)}
+\end{equation}
+
+\subsubsection{Firms' Problem}
+
+As above, firms are mechanically making entry decisions based on \eqref{firm-objective}. 
+
+Assume that $\lambda^o(h) \geq \underline{\lambda}$ (otherwise, all firms would face market return 0.) Assume also that there is an interior solution (so $F_\theta \in (0, 1)$.) Then, we have: 
+
+\begin{align}
+    e_H &= F_H(R - p) \label{high-entry} \\ 
+    e_L &= F_L(\phi R - p) \label{low-entry}
+\end{align}
+
+In other words, given continuua of firms, the share of firms with outside options leading to entry is exactly given by the CDF of the relevant distribution.
+
+\subsubsection{Rater's Problem: Credibility Constraint}
+
+The problem here is to solve \eqref{CRA-objective} in a forward-looking way (i.e., anticipating \eqref{high-entry}, \eqref{low-entry}, \eqref{lambda-o-final}.)
+
+However, there is a constraint. To motivate entry, we assumed that $\lambda^o(h) \geq \underline{\lambda}$ (that is, the market is confident enough in the $h$ signal to invest.) That is: 
+
+\begin{align*}
+    \lambda^o(h) &\geq \underline{\lambda} \\ 
+    \frac{e_H \lambda}{e_H \lambda + \phi e_L (1 - \lambda)} &\geq \underline{\lambda} \hspace{5 em} \text{by \eqref{lambda-o-final}} \\ 
+    e_H \lambda (1 - \underline{\lambda}) &\geq \phi e_L \underline{\lambda} (1 - \lambda) \\ 
+    \phi &\leq \frac{e_H \lambda (1 - \underline{\lambda})}{e_L \underline{\lambda} (1 - \lambda)} \label{MC-cons}\numberthis
+\end{align*}
+
+This last constraint (which we call the \textbf{Market Credibility} constraint, or (MC)) can be interpreted as a sort of discipline on the CRA's dishonesty $\phi$. It says that the CRA cannot lie so much that the market ceases to invest in any firms. 
+
+\subsubsection{Raters' Problem: Equilibrium Conditions}
+
+We wish to solve \eqref{CRA-objective} subject to \eqref{MC-cons}. As before, we assume an interior solution, $F_H(R - p) \in (0, 1), F_L(\phi R - p) \in (0, 1)$.
+
+Write the Lagrangian: 
+
+\begin{align*}
+    \mathscr{L} &\equiv p \{ F_H (R - p)\lambda + F_L(\phi R - p)(1 - \lambda)\} \label{Lagrangian} \numberthis \\ 
+    &- \mu(\log \phi + \log F_L(\phi R - p) - \log F_H(R - p) - \log \tau)
+\end{align*}
+
+Where: 
+
+\begin{equation}
+    \tau \equiv \frac{\lambda (1 - \underline{\lambda})}{\underline{\lambda}(1 - \lambda)}
+\end{equation}
+
+Note that $\tau$ is a constant function of exogenous parameters. 
+
+We can then derive relevant FOCs: 
 
 \begin{itemize}
-    \item High types: $e_H = F_H(R - p)$
-    \item Low types: $e_L = F_L(\phi R - p)$ 
+    \item \textbf{FOC ($\phi$)}
+    \begin{equation}
+        \label{FOC-phi}
+        \phi p R (1 - \lambda)f_L(\phi R - p) = \mu \left(1 + \frac{\phi R f_L(\phi R - p)}{F_L(\phi R - p)}\right)
+    \end{equation}
+
+    The LHS of this equation is the payoff accruing to $L$-types for any $\phi$. The RHS is something like a percentage shift in the entrance of $L$-types, scaled by payoff $\phi R$. 
+
+    \item \textbf{FOC $p$}
+    
+    \begin{align*}
+        0 &= F_H (R - p)\lambda + F_L(\phi R - p) \numberthis \label{FOC-p}  \\ 
+        &- p\left(f_H(R - p)\lambda + f_L(\phi R - p)(1 - \lambda) \right) \\ 
+        &+ \mu \left(\frac{f_L (\phi R - p)}{F_L (\phi R - p)} - \frac{f_H(R - p)}{F_H(R - p)}\right)
+    \end{align*}
+
+    The last term is the most interesting for this paper; it captures the CRA's sensitivity to distributional effects (i.e., the fact that the CRA cares not only \emph{how many} firms are buying ratings, but about the types of those firms, since that impacts the allowable amount of lying, etc.)
+
+    The first two terms are standard monopoly pricing objects (the first term says that raising prices gets us more per transaction, the second that we lose firms at the margins by doing so.)
+
+    \item \textbf{Complementary Slackness}
+    
+    \begin{equation}
+        \label{slackness}
+        \mu(\log \phi + \log F_L(\phi R - p) - \log F_H(R - p) - \log \tau) = 0
+    \end{equation}
+
+    This is \eqref{MC-cons}, but log-linearized for convenience.
 \end{itemize}
 
-subject to the constraint that $\mathbbm{1}_{\lambda^o(h) \geq \uline{\lambda}} = 1$.
+\subsection{Expression for Lagrange Multiplier}
 
-Rewrite that prior in terms of model primitives: 
+It's possible to rewrite the FOC ($\phi$), \eqref{FOC-phi}, to get an expression for $\mu$: 
 
 \begin{equation}
-    \lambda^o(h) = \frac{e_H \lambda}{e_H \lambda + \phi e_L (1 - \lambda)} \geq \uline{\lambda}
+    \label{mu}
+    \mu = \phi R(1 - \lambda)F_L(\phi R - p) \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)}
 \end{equation}
 
-We can rewrite this as a constraint on $\phi$: 
+The left-hand multiplier is the market payoff accruing to low-type firms. The fractional term is the new share of $L$-type entrants (i.e., after taking into account new entry at the margin.)
 
-\begin{equation}
-    \phi \leq \frac{e_H \lambda (1 - \uline{\lambda})}{e_L \uline{\lambda} (1 - \lambda)}
-\end{equation} 
+The canonical interpretation of this multiplier is that it corresponds to the value of slightly relaxing the market credibility constraint \eqref{MC-cons} (i.e., of lowering $\underline{\lambda}$.)
 
-This passes a sanity check, since it says that (a) the maximum allowable dishonesty $\phi$ is bounded above by some function of the right quantities, and (b) the bound is increasing in high entry, decreasing in low entry.
+What's worth noting is that, in an interior solution, the following conditions are equivalent to the binding of (MC) (i.e., of a nonzero $\mu$):
 
+\begin{enumerate}
+    \item Market reward $R$ is nonzero. 
+    \item The price $p$ is nonzero.
+    \item $\lambda \neq 1$ (i.e., there is a nonzero mass of $L$-type firms.)
+    \item The dishonesty parameter $\phi$ is nonzero.
+    \item The distribution $f_L(\cdot)$ of $L$-type firms is not locally stationary (i.e., $f_L (\phi R - p) \neq 0$.) This amounts to saying that a small perturbation will motivate some low entry.
+\end{enumerate}
 
-\subsubsection*{Rater's Problem}
+\subsection{Distribution-Contingency of Equilibria}
 
-The rater wants to maximize $p \mathbb{E} | \Gamma(p, \phi) |$, as above. We know that entry flow is $F_L(\phi R - p) + F_H(R - p)$. So this gives us the following optimization problem: 
+\subsubsection{Existence and Uniqueness}
 
-\begin{equation}
-    \begin{aligned}
-    & \underset{p, \phi}{\text{maximize}}
-    & & p \Big(F_H(R - p) + F_L(\phi R - p)\Big) \\
-    & \text{subject to}
-    & & 0 \leq \phi \leq \frac{e_H \lambda (1 - \uline{\lambda})}{e_L \uline{\lambda} (1 - \lambda)}
-    \end{aligned}
-\end{equation}
+Since so many of the equilibrium objects (i.e., \eqref{FOC-phi}, \eqref{FOC-p}, \eqref{slackness}, \eqref{mu})) are based on densities and CDFs, it's reasonable to ask to what extent the equilibria are distribution-dependent.  
 
-We see that $\frac{\partial}{\partial \phi}$ of the objective is positive, which means that, whatever the price, the rater can benefit by lying a little more (within the constraint). Let $\tau$ be the ratio 
+\begin{proposition}
+If $F_H$ and $F_L$ are differentiable functions $F_\theta: \mathbb{R} \to \mathbb{R}$ with compact supports $\omega_\theta \equiv \text{supp}F_\theta$, and the following parameter restrictions hold, then there is a unique equilibrium. 
 
-\begin{equation}
-    \tau \equiv \frac{\lambda(1-\uline{\lambda})}{\uline{\lambda}(1-\lambda)}
-\end{equation}
+\begin{itemize}
+    \item Some restriction on $R$. 
+    \item Some restriction on $\lambda$.
+    \item Some restriction on $\underline{\lambda}$.
+\end{itemize}
+\end{proposition}
 
-Then we have 
+\begin{proof}
+\end{proof}
 
-\begin{equation}
-    \begin{aligned}
-    & \underset{p, \phi}{\text{maximize}}
-    & & p \Big(F_H(R - p) + F_L(\phi R - p)\Big) \\
-    & \text{subject to}
-    & & \frac{\phi}{\tau} = \frac{F_H(R-p)}{F_L(\phi R - p)} \equiv \frac{e_H}{e_L}
-    \end{aligned}
-\end{equation}
+\subsubsection{Dispersion in Distributions}
 
-We can sketch out this optimal curve for a simple example. (Would it help to interpret $\phi$ as the fixed point of a map $f: x \mapsto \frac{\tau e_H(p)}{e_L(\phi, p)}$?)
+In practice, it's reasonable to expect that $\mathbb{E} F_L < \mathbb{E} F_H$. One interpretation of the outside option $\omega_i$ is that it corresponds to outcomes on the private debt market, so this simply means that high types do strictly better there, in expectation, than low types. 
+
+In this section, we examine the mileage we can derive from this assumption. 
+
+\newpage
+
+\section{Numerical Implementation}
 
 \newpage 
 
-% \subsection*{Lagrangian Formulation (WIP)}
+\section{Uniform Case}
 
-% This turned out messier than I'd hoped, so I put it in a separate page. 
+This section studies a highly specialized case of the model. We assume that:
 
-% \begin{equation*}
-%     \mathscr{L} = p \Big(F_H(R - p) + F_L(\phi R - p)\Big) - \beta \Big(\frac{F_H(R - p) \lambda}{F_H(R - p) \lambda + \phi F_L(\phi R - p) (1 - \lambda)} - \uline{\lambda} \Big)
-% \end{equation*}
+\begin{align*}
+    \omega &\equiv \omega_H = \omega_L \\
+    \omega &\sim U[\underline{\omega}, \underline{\omega} + 1]
+\end{align*}
 
-% Write down the FOCs: 
+Such that $R \in \text{supp}\{\omega_\theta\}$. 
 
-% \paragraph{FOC ($\beta$)} This just gives us $\frac{F_H(R - p) \lambda}{F_H(R - p) \lambda + \phi F_L(\phi R - p) (1 - \lambda)} = \uline{\lambda}$, the market credulity constraint. 
+Note that this assumption implies that the \textbf{private debt market} (one interpretation for the type-contingent outside options firms are assigned generally) is perfectly uninformed. That is, outside options are not type-contingent.
 
-% \paragraph{FOC ($p$)} Write the raw partial derivative 
+\subsection{Analytical Results}
 
-% \begin{align*}
-%     \frac{\partial}{\partial p} \mathscr{L} &= \left[F_H(R - p) + F_L(\phi R - p)\right] - p \left[f_H(R - p) + f_L(\phi R - p) \right] + \beta \frac{f_H(R - p)\lambda}{F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)} \\ 
-%     &- \beta (F_H(R - p)\lambda)\frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\left[F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)\right]^2}
-% \end{align*}
+\subsection{Numerical Results and Comparative Statics}
 
-% Now, we can simplify. Say that $\tau \equiv F_H(R-p)\lambda + \phi F_L(\phi R - p)(1-\lambda)$. This is thus: 
+Here, we go over numerical results which are specific to the case above. 
 
-% \begin{align*}
-%     \frac{\partial}{\partial p} \mathscr{L} &= \left[F_H(R - p) + F_L(\phi R - p)\right] - p \left[f_H(R - p) + f_L(\phi R - p) \right] + \beta \frac{f_H(R - p)\lambda}{\tau} \\ 
-%     &- \beta (F_H(R - p)\lambda)\frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau^2}
-% \end{align*}
+\newpage
 
-% And rewrite after equating to 0: 
+\section{Comparative Statics}
 
-% \begin{align*}
-%     F_H(R - p) + F_L(\phi R - p) + \beta \frac{f_H (R - p)\lambda}{\tau} = \hspace{1 em} &p[f_H(R - p) + f_L(\phi R - p)] \\ 
-%     &+ \beta \frac{F_H (R - p)\lambda}{\tau} \frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau}
-% \end{align*}
+\newpage
 
-% And substituting in for entry decisions wherever possible: 
+\section{References}
 
-% \begin{align*}
-%     e_H + e_L + \beta \frac{f_H (R - p)\lambda}{\tau} = \hspace{1 em} &p[f_H(R - p) + f_L(\phi R - p)] \\ 
-%     &+ \beta \frac{e_H\lambda}{\tau} \frac{f_H(R - p)\lambda + \phi f_L(\phi R - p)(1 - \lambda)}{\tau}
-% \end{align*}
+\newpage
 
-% Where $\tau \equiv e_H \lambda + \phi e_L (1 -\lambda)$.
-
-% \paragraph{FOC ($\phi$)} Write the raw partial derivative 
-
-% \begin{align*}
-%     \frac{\partial}{\partial \phi} \mathscr{L} &= p f_L (\phi R - p)R + \beta e_H \lambda ( 1 - \lambda) \frac{e_L + \phi f_L (\phi R - p)R}{\tau^2}
-% \end{align*}
-
+\appendix
+\addcontentsline{toc}{section}{Appendices}
+\section*{Appendices}
+\section{Analytical Appendix}
+\section{Computational Appendix}
 
 \end{document}
-
