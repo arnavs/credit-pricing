@@ -1,12 +1,17 @@
 \documentclass{article}
 \usepackage{amsmath, amsthm, amsfonts, amssymb}
 \usepackage{bbm}
+\usepackage{hyperref}
+\usepackage{cleveref}
 \usepackage{mathrsfs}
+\usepackage{listings}
+\usepackage{color}
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
 \theoremstyle{definition}
 \newtheorem{proposition}{Proposition}
+\DeclareMathOperator\supp{supp}
 
 
 \title{Credit \& Credibility }
@@ -19,6 +24,8 @@
 \paragraph*{Overivew} We study a model of strategic behavior by a profit-maximizing credit rating agency (CRA). The rater jointly chooses the ratings and the (flat) price of a rating, so as to influence the size and composition of the set of ratings-seeking firms. We derive equilibrium conditions for the static case, and present some numerical results. 
 
 Of course, this is not a \emph{sui generis} area of research. Bolton, Freixas, and Shapiro (2010) model CRAs as players in a competitive market. Bar-Isaac and Shapiro (2010) analyze the time-varying nature of their incentives and behavior over the business cycle, and Kamenica and Gentzow (2011) establish the seminal ``Bayesian Persuasion" setting for strategic information transmission. 
+
+On the empirical side, Gillette et al. (2018) find that a 2010 upward shock to ratings (without a corresponding improvement in fundamentals) ``led to larger fees and to increases in [CRA] market share.'' Xia (2011) concludes something similar from a dataset of over 70,000 U.S. credit ratings.
 
 We are indebted to all of this work (and more). The chief contribution of this note is to jointly solve the pricing problem and ``decision problem'' for ratings in one shot.
 
@@ -199,7 +206,7 @@ We can then derive relevant FOCs:
     \item \textbf{FOC $p$}
     
     \begin{align*}
-        0 &= F_H (R - p)\lambda + F_L(\phi R - p) \numberthis \label{FOC-p}  \\ 
+        0 &= F_H (R - p)\lambda + F_L(\phi R - p)(1 - \lambda) \numberthis \label{FOC-p}  \\ 
         &- p\left(f_H(R - p)\lambda + f_L(\phi R - p)(1 - \lambda) \right) \\ 
         &+ \mu \left(\frac{f_L (\phi R - p)}{F_L (\phi R - p)} - \frac{f_H(R - p)}{F_H(R - p)}\right)
     \end{align*}
@@ -224,76 +231,131 @@ It's possible to rewrite the FOC ($\phi$), \eqref{FOC-phi}, to get an expression
 
 \begin{equation}
     \label{mu}
-    \mu = \phi R(1 - \lambda)F_L(\phi R - p) \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)}
+    \mu = \underbrace{\phi R(1 - \lambda)F_L(\phi R - p)}_{\text{total profits for $L$-types}} \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)}
 \end{equation}
 
-The left-hand multiplier is the market payoff accruing to low-type firms. The fractional term is the new share of $L$-type entrants (i.e., after taking into account new entry at the margin.)
+Note that that the multiplier (which corresponds roughly to the value of loosening the credibility constraint) depends only on properties of low types. This is because the dishonesty which attracts low types has no effect on high types. 
 
-The canonical interpretation of this multiplier is that it corresponds to the value of slightly relaxing the market credibility constraint \eqref{MC-cons} (i.e., of lowering $\underline{\lambda}$.)
+\newpage
 
-What's worth noting is that, in an interior solution, the following conditions are equivalent to the binding of (MC) (i.e., of a nonzero $\mu$):
+\subsection{Analytical Results}
 
-\begin{enumerate}
-    \item Market reward $R$ is nonzero. 
-    \item The price $p$ is nonzero.
-    \item $\lambda \neq 1$ (i.e., there is a nonzero mass of $L$-type firms.)
-    \item The dishonesty parameter $\phi$ is nonzero.
-    \item The distribution $f_L(\cdot)$ of $L$-type firms is not locally stationary (i.e., $f_L (\phi R - p) \neq 0$.) This amounts to saying that a small perturbation will motivate some low entry.
-\end{enumerate}
+In this section, we show some properties of the general model.
 
-\subsection{Distribution-Contingency of Equilibria}
-
-\subsubsection{Existence and Uniqueness}
-
-Since so many of the equilibrium objects (i.e., \eqref{FOC-phi}, \eqref{FOC-p}, \eqref{slackness}, \eqref{mu})) are based on densities and CDFs, it's reasonable to ask to what extent the equilibria are distribution-dependent.  
-
-\begin{proposition}
-If $F_H$ and $F_L$ are differentiable functions $F_\theta: \mathbb{R} \to \mathbb{R}$ with compact supports $\omega_\theta \equiv \text{supp}F_\theta$, and the following parameter restrictions hold, then there is a unique equilibrium. 
-
-\begin{itemize}
-    \item Some restriction on $R$. 
-    \item Some restriction on $\lambda$.
-    \item Some restriction on $\underline{\lambda}$.
-\end{itemize}
+\begin{proposition}[Existence]
+    \label{existence}
+If $F_H, F_L \in C^0$, the CRA's optimization problem has a solution.
 \end{proposition}
 
 \begin{proof}
+WLOG, we can restrict our attention to the subset $(\phi, p) \in X \equiv \{[0, 1] \times [0, R]\}$ of $\mathbb{R}^2$ (if the price exceeded $R$, nobody would enter.)
+
+The feasible set of the optimization problem is: 
+
+\begin{align}
+    \label{set-C}
+    C \equiv \{(\phi, p) | g(\phi, p) \leq 0\} \cap X \\ 
+    g(\phi, p) \equiv  \phi F_L(\phi R - p) - \tau F_H (R - p)
+\end{align}
+
+By Heine-Borel, $C \subset \mathbb{R}^2$ is compact if it is closed and bounded. 
+
+\begin{itemize}
+    \item \underline{Bounded:} The box $[0, 1] \times [0, R]$ is clearly bounded. $C \subseteq X$, so $C$ is also bounded.
+
+    \item \underline{Closed:} $X$ is also trivially closed. The finite intersection of closed sets is closed, so we need to show that $\{(\phi, p) | g(\phi, p) \leq 0\}$  is closed. 
+    
+    This is the preimage of a closed set under some map $g$. If $g$ is a continuous map, then the set is also closed. The RHS of $g$ is clearly continuous jointly in $(\phi, p)$. The LHS is a continuous function $F_L$ composed with a linear map $\phi R - p$, multiplied by a projection $(\phi, p) \mapsto \phi$. So it's continuous as well, which implies $g$ is.\footnote{The reason to be pedantic about this is that it is quite possible for functions to be continuous separately in each variable, but not be a continuous map.}
+\end{itemize}
+
+Since the objective \eqref{CRA-objective} is continuous, we're trying to maximize a continuous function on a compact set. The Weierstrass EVT tells us this is possible.\footnote{The set $C$ is never empty, as $(0, R)$ is always in $X$ and always satisfies the inequality.}
 \end{proof}
 
-\subsubsection{Dispersion in Distributions}
+\hrule \hspace{5 em} 
 
-In practice, it's reasonable to expect that $\mathbb{E} F_L < \mathbb{E} F_H$. One interpretation of the outside option $\omega_i$ is that it corresponds to outcomes on the private debt market, so this simply means that high types do strictly better there, in expectation, than low types. 
+\begin{proposition}[No Truth-Telling] If $F_H, F_L \in C^0$, then truth-telling equilibria (where $\phi = 0$) are strictly dominated, and there is always some low entry.
+\end{proposition}
 
-In this section, we examine the mileage we can derive from this assumption. 
+\begin{proof}
+    If $\phi = 0$, then the CRA is solving a standard monopoly pricing problem: 
+
+    \[ \max\limits_{p \in [0, R]} p F_H(R - p) \]
+
+    At the corners, profits are zero, so as long as $\min \supp F_H < R$, there will be some entry. This means that $g(0, p^*) < 0$.
+
+    But $\phi F_L(\phi R - p^*)$ is continuous in $\phi$. So it's feasible to increase $\phi$ (subject to the same condition on $F_L$) such that there is an infinitesimal amount of low entry, which is strictly better than the alternative. 
+\end{proof}
+
+\newpage
+
+\begin{proposition}[Constraint Binds] If $F_H, F_L \in C^1$, and the following conditions hold, then the market credibility constraint in \eqref{MC-cons} will always bind.
+
+\begin{enumerate}
+    \item The market reward $R$ is nonzero.
+    \item The share of low types $1 - \lambda$ is nonzero.
+    \item The density $f_L(\phi R - p)$ is nonzero within the feasible region (e.g., the support is connected.)
+\end{enumerate}
+
+\end{proposition} 
+
+\begin{proof}
+    The fact that $F_H, F_L \in C^1$ means that the objective and constraint are each differentiable, which justifies the use of the Lagrangian \eqref{Lagrangian}.\footnote{Subject to some regularity conditions.} We can solve for the Lagrange multiplier, $\mu$ (given in \eqref{mu}):
+
+    \[     \mu = \underbrace{\phi R(1 - \lambda)F_L(\phi R - p)}_{\text{total profits for $L$-types}} \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)} \]
+    
+    When this multiplier is nonzero, we know that the complementary slackness constraint \eqref{slackness} reduces to the credibility constraint \eqref{MC-cons}.
+
+    The conditions given above hold iff the multiplier is strictly positive.
+
+    Note that we know that $F_L(\phi R - p) > 0$ (there is some low entry) and $\phi > 0$ by the preceding proposition.
+\end{proof}
+
+
+\hrule \hspace{5 em} 
+
+The intuition for this next result is to analyze what happens when the ``private debt market'' is able to distinguish between high and low types.
+
+One weak way of sorting is first-order stochastic dominance (FSD), which says that $\forall x \in \mathbb{R}$, high types don't have a lower chance of doing better than $x$, compared to low types.
+
+\begin{proposition}[Strict FSD] If $F_H, F_L \in C^0$ and $F_H(x) \leq F_L(x)$ everywhere, then RESULTS.
+\end{proposition}
+
+\begin{proof}
+\end{proof} 
 
 \newpage
 
 \section{Numerical Implementation}
 
+The code and output for what follows is made available on GitHub, at \url{https://github.com/arnavs/credit-pricing}, under a permissive BSD-3 license.
+
+\subsection{Overview}
+
+We implemented the model in Julia (version 1.1.0.) The basic approach was to write a function \texttt{utility([$\phi$, $p$]; model = $m$)} which returns the CRA payoff for a point in the feasible set, and 0 otherwise.
+
+We fed this function to the \href{https://github.com/robertfeldt/BlackBoxOptim.jl}{\color{blue} BlackBoxOptim.jl} optimization package, which is designed for use without gradient information from the objective. Having the optimizer run for 20 seconds per model was sufficient to find an approximate optimum. 
+
+Note that this choice was for convenience; Julia has capable autodifferentiation tools, and in any case analytic gradients for our objective are possible for ``well-behaved'' distributions $F_L, F_H$.
+
 \newpage 
 
 \section{Uniform Case}
-
-This section studies a highly specialized case of the model. We assume that:
-
-\begin{align*}
-    \omega &\equiv \omega_H = \omega_L \\
-    \omega &\sim U[\underline{\omega}, \underline{\omega} + 1]
-\end{align*}
-
-Such that $R \in \text{supp}\{\omega_\theta\}$. 
-
-Note that this assumption implies that the \textbf{private debt market} (one interpretation for the type-contingent outside options firms are assigned generally) is perfectly uninformed. That is, outside options are not type-contingent.
 
 \subsection{Analytical Results}
 
 \subsection{Numerical Results and Comparative Statics}
 
-Here, we go over numerical results which are specific to the case above. 
-
 \newpage
 
-\section{Comparative Statics}
+\section{Conclusion}
+
+In this note, we present and discuss a simple model where a credit rater jointly chooses prices $p$ and dishonesty $\phi$ in a one-shot game. We find that the CRA obeys a standard monopoly pricing rule, modified to account for sensitivity to the \emph{quality} (and not just quantity) of customers. In particular, the CRA cares about the marginal shift in fractions of high and low type firms brought on by pricing changes.
+
+The other chief results are that the credibility constraint \eqref{MC-cons} binds always (subject to loose restrictions), and that {SOMETHING FOLLOWS FROM FSD.}
+
+We also created a \href{https://github.com/arnavs/credit}{\color{blue} GitHub repository} with Julia code and results for a baseline case of the model (uniform, i.i.d outside options), which we paid special attention to in this note. \\ 
+
+The problem of balancing a credit rater's need for economic incentives, against the public's need for reliable and undistorted information, is a significant policy challenge. We hope that this note is able to contribute to that discussion.
 
 \newpage
 
@@ -301,10 +363,8 @@ Here, we go over numerical results which are specific to the case above.
 
 \newpage
 
-\appendix
-\addcontentsline{toc}{section}{Appendices}
-\section*{Appendices}
-\section{Analytical Appendix}
-\section{Computational Appendix}
+% \appendix
+% \addcontentsline{toc}{section}{Appendices}
+% \section{Computational Appendix}
 
 \end{document}
