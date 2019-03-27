@@ -49,7 +49,7 @@
 
 \begin{frame}
     \frametitle{Our Model (English)}
-    One-shot CRA choosing prices and ratings for a continuum of firms, with a lower bound on ratings informativeness. 
+    One-shot CRA choosing prices and ratings for a continuum of firms, with a lower bound on ratings informativeness. \pause 
     \begin{itemize}[<+>]
         \item Firms: $i \in [0, 1]$, with $\theta_i \in \{H, L\}$. Have outside options contingent on type: $\omega_i \sim F_\theta$. 
         \item Capital Market: Invests in any firm which gets a good signal (WLOG, it can be shown there are two signals), so long as there's a minimum ``precision.'' 
@@ -76,11 +76,11 @@
     \begin{itemize}[<+>]
         \item Assigns outcomes to firms according to a simple cutoff rule: 
         \begin{equation}
-            U: \theta \mapsto R \underbrace{\mathbbm{1}_{\lambda^o(\theta) \geq \underline{\lambda}, \theta = h}}_{\text{Y/N investment decision}}    
+            U: \theta \mapsto R \underbrace{\mathbbm{1}_{\lambda^o(\theta) \geq \underline{\lambda}, \theta = h}}_{\text{Binary investment decision}}    
             \label{market-objective}
         \end{equation}
         \item What's required for investment? 
-    \end{itemize}
+    \end{itemize} \pause
     \begin{enumerate}
         \item A positive signal $h$. \emph{and}
         \item A minimum posterior $\Pr[\theta_\text{firm} = H | \text{signal} = h] \geq \underline{\lambda}$ 
@@ -97,10 +97,12 @@
         \begin{equation}
             \max\limits_{p \geq 0, \phi \in [0, 1]} p \{F_L(\phi R - p)(1 - \lambda) + F_H(R - p)\lambda\}
             \label{CRA-objective}    
-        \end{equation} s.t. the constraint in \eqref{market-objective} is satisfied.
-    \end{itemize} \pause 
+        \end{equation} s.t. the constraint in \eqref{market-objective} is satisfied. 
+        
+        \hspace{1 em} \\ 
 
-    This objective is \textbf{forward-looking}, in that it incorporates optimality conditions for firms and the market. 
+        This objective is \textbf{forward-looking}, in that it incorporates optimality conditions for firms and the market. 
+    \end{itemize} 
 \end{frame}
 
 \begin{frame}

@@ -265,7 +265,9 @@ By Heine-Borel, $C \subset \mathbb{R}^2$ is compact if it is closed and bounded.
 
     \item \underline{Closed:} $X$ is also trivially closed. The finite intersection of closed sets is closed, so we need to show that $\{(\phi, p) | g(\phi, p) \leq 0\}$  is closed. 
     
-    This is the preimage of a closed set under some map $g$. If $g$ is a continuous map, then the set is also closed. The RHS of $g$ is clearly continuous jointly in $(\phi, p)$. The LHS is a continuous function $F_L$ composed with a linear map $\phi R - p$, multiplied by a projection $(\phi, p) \mapsto \phi$. So it's continuous as well, which implies $g$ is.\footnote{The reason to be pedantic about this is that it is quite possible for functions to be continuous separately in each variable, but not be a continuous map.}
+    This is the preimage of a closed set under some map $g$. If $g$ is a continuous map, then the set is also closed. We know $g$ is continuous, because it's the difference of two continuous functions in $(\phi, p)$.
+    
+    % \footnote{The reason to be pedantic about this is that it is quite possible for functions to be continuous separately in each variable, but not be a continuous map. The RHS of $g$ is clearly continuous jointly in $(\phi, p)$. The LHS is a continuous function $F_L$ composed with a linear map $\phi R - p$, multiplied by a projection $(\phi, p) \mapsto \phi$. So it's continuous as well, which implies $g$ is.} 
 \end{itemize}
 
 Since the objective \eqref{CRA-objective} is continuous, we're trying to maximize a continuous function on a compact set. The Weierstrass EVT tells us this is possible.\footnote{The set $C$ is never empty, as $(0, R)$ is always in $X$ and always satisfies the inequality.}
@@ -283,7 +285,7 @@ Since the objective \eqref{CRA-objective} is continuous, we're trying to maximiz
 
     At the corners, profits are zero, so as long as $\min \supp F_H < R$, there will be some entry. This means that $g(0, p^*) < 0$.
 
-    But $\phi F_L(\phi R - p^*)$ is continuous in $\phi$. So it's feasible to increase $\phi$ (subject to the same condition on $F_L$) such that there is an infinitesimal amount of low entry, which is strictly better than the alternative. 
+    But $\phi \mapsto \phi F_L(\phi R - p^*)$ is continuous in $\phi$. So it's feasible to increase $\phi$ (subject to the same condition on $F_L$) such that there is an infinitesimal amount of low entry, which is strictly better than the alternative. 
 \end{proof}
 
 \newpage
@@ -299,23 +301,23 @@ Since the objective \eqref{CRA-objective} is continuous, we're trying to maximiz
 \end{proposition} 
 
 \begin{proof}
-    The fact that $F_H, F_L \in C^1$ means that the objective and constraint are each differentiable, which justifies the use of the Lagrangian \eqref{Lagrangian}.\footnote{Subject to some regularity conditions.} We can solve for the Lagrange multiplier, $\mu$ (given in \eqref{mu}):
+    Fermat shows that, for a function $f$ on a domain $A$, the extrema of $f$ occur either at (a) nondifferentiable points, (b) stationary points, or (c) points on the boundary of $A$.
 
-    \[     \mu = \underbrace{\phi R(1 - \lambda)F_L(\phi R - p)}_{\text{total profits for $L$-types}} \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)} \]
-    
-    When this multiplier is nonzero, we know that the complementary slackness constraint \eqref{slackness} reduces to the credibility constraint \eqref{MC-cons}.
+    Since $F_H, F_L \in C^1$, there are no nondifferentiable points. Moreover, the partial $\frac{\partial}{\partial \phi}f$ of the objective is: 
 
-    The conditions given above hold iff the multiplier is strictly positive.
+    \[ pR(1 - \lambda)f_L(\phi R - p) \]
 
-    Note that we know that $F_L(\phi R - p) > 0$ (there is some low entry) and $\phi > 0$ by the preceding proposition.
+    We know that $p > 0$ by the argument above. This object is nonzero iff the conditions assumed hold, in which case there are no stationary points in the interior.
+
+    You can also show this by analyzing the Lagrange multiplier $\mu$ given in \eqref{mu}, which gives the same conditions.
 \end{proof}
 
 
 \hrule \hspace{5 em} 
 
-The intuition for this next result is to analyze what happens when the ``private debt market'' is able to distinguish between high and low types.
+% The intuition for this next result is to analyze what happens when the ``private debt market'' is able to distinguish between high and low types.
 
-One weak way of sorting is first-order stochastic dominance (FSD), which says that $\forall x \in \mathbb{R}$, high types don't have a lower chance of doing better than $x$, compared to low types.
+% One weak way of sorting is first-order stochastic dominance (FSD), which says that $\forall x \in \mathbb{R}$, high types don't have a lower chance of doing better than $x$, compared to low types.
 
 \begin{proposition}[Strict FSD] If $F_H, F_L \in C^0$ and $F_H(x) \leq F_L(x)$ everywhere, then RESULTS.
 \end{proposition}
@@ -361,10 +363,34 @@ The problem of balancing a credit rater's need for economic incentives, against 
 
 \section{References}
 
-\newpage
+% \newpage
 
 % \appendix
 % \addcontentsline{toc}{section}{Appendices}
-% \section{Computational Appendix}
+% \section{Analytical Appendix}
+
+% Another proof of the non-interior-ness of the optimum.
+
+% \begin{proposition}[Constraint Binds] If $F_H, F_L \in C^1$, and the following conditions hold, then the market credibility constraint in \eqref{MC-cons} will always bind.
+
+%     \begin{enumerate}
+%         \item The market reward $R$ is nonzero.
+%         \item The share of low types $1 - \lambda$ is nonzero.
+%         \item The density $f_L(\phi R - p)$ is nonzero within the feasible region (e.g., the support is connected.)
+%     \end{enumerate}
+    
+%     \end{proposition} 
+    
+%     \begin{proof}
+%         The fact that $F_H, F_L \in C^1$ means that the objective and constraint are each differentiable, which justifies the use of the Lagrangian \eqref{Lagrangian}.\footnote{Subject to some regularity conditions.} We can solve for the Lagrange multiplier, $\mu$ (given in \eqref{mu}):
+    
+%         \[     \mu = \underbrace{\phi R(1 - \lambda)F_L(\phi R - p)}_{\text{total profits for $L$-types}} \cdot \frac{f_L(\phi R - p)}{F_L(\phi R - p) + \phi R f_L (\phi R - p)} \]
+        
+%         When this multiplier is nonzero, we know that the complementary slackness constraint \eqref{slackness} reduces to the credibility constraint \eqref{MC-cons}.
+    
+%         The conditions given above hold iff the multiplier is strictly positive.
+    
+%         Note that we know that $F_L(\phi R - p) > 0$ (there is some low entry) and $\phi > 0$ by the preceding proposition.
+%     \end{proof}
 
 \end{document}
